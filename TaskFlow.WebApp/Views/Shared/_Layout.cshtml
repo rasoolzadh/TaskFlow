@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-g" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TaskFlow</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/TaskFlow.WebApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- The new Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            TaskFlow
+        </div>
+
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Home</a>
+            </li>
+
+            <!-- Admin-only Links -->
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Jobs" asp-action="Index">Jobs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                </li>
+            }
+
+            <!-- Technician-only Link -->
+            @if (User.IsInRole("Technician"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Technician" asp-action="MyJobs">My Jobs</a>
+                </li>
+            }
+        </ul>
+
+        <!-- Footer section for Login/Logout -->
+        <div class="sidebar-footer">
+            @if (User.Identity is { IsAuthenticated: true })
+            {
+                <div class="mb-2">
+                    <span>Hello, @User.Identity.Name!</span>
+                </div>
+                <form asp-controller="Account" asp-action="Logout" method="post">
+                    <button type="submit" class="btn btn-outline-danger w-100">Logout</button>
+                </form>
+            }
+            else
+            {
+                <a class="btn btn-primary w-100" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+            }
+        </div>
+    </div>
+
+    <!-- The new Main Content Area -->
+    <main class="main-content">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

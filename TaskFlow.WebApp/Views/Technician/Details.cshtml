@@ -1,0 +1,47 @@
+﻿@model TaskFlow.WebApp.Models.JobViewModel
+@{
+    ViewData["Title"] = "My Job Details";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>@Model.Title</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">
+            Title
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="col-sm-3">
+            Client
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Client.Name)
+        </dd>
+        <dt class="col-sm-3">
+            Client Address
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Client.Address)
+        </dd>
+        <dt class="col-sm-3">
+            Status
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt class="col-sm-3">
+            Description
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="UpdateStatus" asp-route-id="@Model.Id" class="btn btn-primary">Update Status</a> |
+    <a asp-action="MyJobs" class="btn btn-secondary">Back to My Jobs</a>
+</div>

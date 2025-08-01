@@ -1,0 +1,45 @@
+﻿@model TaskFlow.WebApp.Models.AssignJobViewModel
+@{
+    ViewData["Title"] = "Assign Job";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Job Details</h4>
+        <dl class="row">
+            <dt class="col-sm-4">Title</dt>
+            <dd class="col-sm-8">@Model.JobTitle</dd>
+
+            <dt class="col-sm-4">Client</dt>
+            <dd class="col-sm-8">@Model.ClientName</dd>
+
+            <dt class="col-sm-4">Description</dt>
+            <dd class="col-sm-8">@Model.JobDescription</dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <h4>Assign Technician</h4>
+        <form asp-action="Assign" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @* This hidden field is crucial to ensure we know which job we are assigning *@
+            <input type="hidden" asp-for="JobId" />
+
+            <div class="form-group mb-3">
+                <label asp-for="TechnicianId" class="control-label"></label>
+                <select asp-for="TechnicianId" class="form-control" asp-items="@Model.Technicians">
+                    <option value="">-- Select a Technician --</option>
+                </select>
+                <span asp-validation-for="TechnicianId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Assign Job" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>

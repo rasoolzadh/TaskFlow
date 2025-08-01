@@ -1,0 +1,102 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn.active:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: none;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+/* === UPDATED SIDEBAR & CONTENT STYLES === */
+
+/* Main body layout */
+body {
+    display: flex;
+    overflow-x: hidden;
+    background-color: #f4f6f9; /* A very light grey for the main content background */
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 250px;
+    min-width: 250px;
+    background-color: #3700B3;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+/* Main Content Area */
+.main-content {
+    margin-left: 250px;
+    padding: 2rem;
+    width: calc(100% - 250px);
+    flex-grow: 1;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+    padding: 0.5rem 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: white;
+}
+
+/* Sidebar Navigation Links */
+.sidebar .nav-item {
+    width: 100%;
+}
+
+.sidebar .nav-link {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    color: rgba(255, 255, 255, 0.75);
+    border-left: 3px solid transparent;
+}
+
+    .sidebar .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+
+    .sidebar .nav-link.active {
+        color: white;
+        font-weight: 500;
+        border-left: 3px solid white;
+    }
+
+/* User Info / Logout Section */
+.sidebar-footer {
+    margin-top: auto;
+    padding: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* --- NEW BUTTON OVERRIDE --- */
+/* This rule targets the blue "Login" button inside the sidebar */
+.sidebar .btn-primary {
+    background-color: #ffffff; /* White background */
+    color: #3700B3; /* Purple text */
+    border-color: #ffffff; /* White border */
+    font-weight: 500;
+}
+
+    .sidebar .btn-primary:hover {
+        background-color: #e9ecef;
+        border-color: #e9ecef;
+    }

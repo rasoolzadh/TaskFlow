@@ -1,0 +1,39 @@
+﻿@model TaskFlow.WebApp.Models.UpdateJobStatusViewModel
+@{
+    ViewData["Title"] = "Update Job Status";
+}
+
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Job Details</h4>
+        <dl class="row">
+            <dt class="col-sm-4">Title</dt>
+            <dd class="col-sm-8">@Model.JobTitle</dd>
+
+            <dt class="col-sm-4">Client</dt>
+            <dd class="col-sm-8">@Model.ClientName</dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <h4>Update Status</h4>
+        <form asp-action="UpdateStatus" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="JobId" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Status" class="control-label"></label>
+                <select asp-for="Status" class="form-control" asp-items="@Model.Statuses"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Update Status" class="btn btn-primary" />
+                <a asp-action="MyJobs" class="btn btn-secondary">Back to My Jobs</a>
+            </div>
+        </form>
+    </div>
+</div>
