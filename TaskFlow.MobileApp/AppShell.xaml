@@ -4,12 +4,17 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:TaskFlow.MobileApp"
+    xmlns:views="clr-namespace:TaskFlow.MobileApp.Views"
     Shell.FlyoutBehavior="Disabled"
     Title="TaskFlow.MobileApp">
 
+    <!-- 
+        This is the initial page that will be displayed when the app starts.
+        We have changed the ContentTemplate to point to our new LoginPage.
+    -->
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginPage}"
+        Route="LoginPage" />
 
 </Shell>

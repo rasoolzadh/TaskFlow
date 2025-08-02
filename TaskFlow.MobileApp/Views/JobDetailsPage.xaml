@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:TaskFlow.MobileApp.ViewModels"
+             xmlns:model="clr-namespace:TaskFlow.MobileApp.Models"
+             x:Class="TaskFlow.MobileApp.Views.JobDetailsPage"
+             x:DataType="vm:JobDetailsViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="10" Padding="20">
+
+            <Frame Padding="15" BorderColor="LightGray" CornerRadius="5">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Job Information" FontSize="20" FontAttributes="Bold" />
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Title: " FontAttributes="Bold" />
+                                <Span Text="{Binding Job.Title}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Description: " FontAttributes="Bold" />
+                                <Span Text="{Binding Job.Description}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Current Status: " FontAttributes="Bold" />
+                                <Span Text="{Binding Job.Status}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="15" BorderColor="LightGray" CornerRadius="5">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Client Information" FontSize="20" FontAttributes="Bold" />
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Name: " FontAttributes="Bold" />
+                                <Span Text="{Binding Job.Client.Name}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="Address: " FontAttributes="Bold" />
+                                <Span Text="{Binding Job.Client.Address}" />
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame Padding="15" BorderColor="LightGray" CornerRadius="5">
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Update Status" FontSize="20" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+
+                    <!-- This button will call the UpdateStatusCommand with the 'InProgress' parameter -->
+                    <Button Text="Start Progress"
+                            IsEnabled="{Binding IsNotBusy}"
+                            Command="{Binding UpdateStatusCommand}"
+                            CommandParameter="{x:Static model:JobStatus.InProgress}" />
+
+                    <!-- This button will call the UpdateStatusCommand with the 'Completed' parameter -->
+                    <Button Text="Complete Job"
+                            BackgroundColor="Green"
+                            IsEnabled="{Binding IsNotBusy}"
+                            Command="{Binding UpdateStatusCommand}"
+                            CommandParameter="{x:Static model:JobStatus.Completed}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
