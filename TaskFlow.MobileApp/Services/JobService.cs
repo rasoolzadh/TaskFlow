@@ -6,6 +6,13 @@ using TaskFlow.MobileApp.Models;
 
 namespace TaskFlow.MobileApp.Services
 {
+    // --- NEW HELPER CLASS ---
+    // This class ensures our JSON payload has the correct property name ("Status")
+    public class StatusUpdatePayload
+    {
+        public JobStatus Status { get; set; }
+    }
+
     public class JobService
     {
         private readonly HttpClient _httpClient;
@@ -43,13 +50,6 @@ namespace TaskFlow.MobileApp.Services
             return new List<Job>();
         }
 
-        // --- NEW METHOD ---
-        /// <summary>
-        /// Updates the status of a specific job.
-        /// </summary>
-        /// <param name="jobId">The ID of the job to update.</param>
-        /// <param name="newStatus">The new status for the job.</param>
-        /// <returns>True if the update was successful, otherwise false.</returns>
         public async Task<bool> UpdateJobStatusAsync(int jobId, JobStatus newStatus)
         {
             try
@@ -62,8 +62,9 @@ namespace TaskFlow.MobileApp.Services
 
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                // The API expects a simple JSON object like: { "status": "InProgress" }
-                var payload = new { status = newStatus };
+                // --- THE FIX ---
+                // Create an instance of our new helper class to ensure correct JSON serialization.
+                var payload = new StatusUpdatePayload { Status = newStatus };
 
                 var response = await _httpClient.PutAsJsonAsync($"/api/jobs/{jobId}/status", payload);
 

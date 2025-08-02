@@ -7,12 +7,13 @@ using System.Security.Claims;
 using TaskFlow.API.Data;
 using TaskFlow.API.DTOs;
 using TaskFlow.API.Entities;
+using TaskFlow.Shared.Enums;
 
 namespace TaskFlow.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // <-- Base authorization for the whole controller
+    [Authorize]
     public class JobsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -38,7 +39,7 @@ namespace TaskFlow.API.Controllers
                 Title = jobDto.Title,
                 Description = jobDto.Description,
                 ClientId = jobDto.ClientId,
-                Status = Shared.Enums.JobStatus.New // Default status
+                Status = JobStatus.New // Default status
             };
 
             _context.Jobs.Add(job);
@@ -65,7 +66,7 @@ namespace TaskFlow.API.Controllers
             }
 
             job.AssignedToId = technicianId;
-            job.Status = Shared.Enums.JobStatus.Assigned;
+            job.Status = JobStatus.Assigned;
 
             await _context.SaveChangesAsync();
             return NoContent();
@@ -76,7 +77,6 @@ namespace TaskFlow.API.Controllers
         [Authorize(Roles = "Technician")]
         public async Task<ActionResult<IEnumerable<Job>>> GetMyJobs()
         {
-            // Get the current user's ID from their token claims
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(currentUserId))
             {
@@ -94,7 +94,7 @@ namespace TaskFlow.API.Controllers
         // ENDPOINT FOR TECHNICIANS: Update the status of an assigned job
         [HttpPut("{id}/status")]
         [Authorize(Roles = "Technician")]
-        public async Task<IActionResult> UpdateJobStatus(int id, JobStatusUpdateDto statusDto)
+        public async Task<IActionResult> UpdateJobStatus(int id, [FromBody] JobStatusUpdateDto statusDto)
         {
             var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(currentUserId))
@@ -108,7 +108,6 @@ namespace TaskFlow.API.Controllers
                 return NotFound("Job not found.");
             }
 
-            // Security Check: Ensure the technician is updating their own job
             if (job.AssignedToId.ToString() != currentUserId)
             {
                 return Forbid("You are not authorized to update this job.");
@@ -126,8 +125,8 @@ namespace TaskFlow.API.Controllers
         public async Task<ActionResult<Job>> GetJob(int id)
         {
             var job = await _context.Jobs
-                .Include(j => j.Client) // Include client details
-                .Include(j => j.AssignedTo) // Include technician details
+                .Include(j => j.Client)
+                .Include(j => j.AssignedTo)
                 .FirstOrDefaultAsync(j => j.Id == id);
 
             if (job == null)
@@ -135,7 +134,6 @@ namespace TaskFlow.API.Controllers
                 return NotFound("Job not found.");
             }
 
-            // If the user is a technician, ensure they can only see their own jobs
             if (User.IsInRole("Technician"))
             {
                 var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);

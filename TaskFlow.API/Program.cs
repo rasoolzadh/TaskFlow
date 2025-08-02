@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization; // <-- Add this using statement
 using TaskFlow.API;
 using TaskFlow.API.Data;
 
@@ -12,15 +13,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // --- DEFINE CORS POLICY ---
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
-// --- ADD CORS SERVICES ---
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          // IMPORTANT: Use the correct URL for your WebApp
-                          policy.WithOrigins("https://localhost:7049")
+                          policy.WithOrigins("https://localhost:7049") // Your WebApp URL
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                       });
@@ -55,12 +53,20 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
-builder.Services.AddControllers();
+
+// --- THE FIX: Configure Controllers to be case-insensitive and handle enums ---
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme { /* ... */ });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement { /* ... */ });
+    // ... (swagger config) ...
 });
 
 var app = builder.Build();
@@ -72,10 +78,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// --- USE THE CORS POLICY ---
-app.UseCors(MyAllowSpecificOrigins); // This must go before UseAuthentication/UseAuthorization
-
+app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
